@@ -3,27 +3,26 @@ package com.example.dailycheckapp.onboarding.util
 import androidx.annotation.DrawableRes
 import com.example.dailycheckapp.R
 
-sealed class OnBoardingPage(
-    @DrawableRes
-    val image: Int,
+data class Page(
     val title: String,
-    val description: String
-) {
-    object First : OnBoardingPage(
-        image = R.drawable.first,
-        title = "Meeting",
-        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
-    )
+    val description: String,
+    @DrawableRes val image: Int,
+)
 
-    object Second : OnBoardingPage(
-        image = R.drawable.second,
-        title = "Coordination",
-        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
+val pages = listOf(
+    Page(
+        title = "Lorem Ipsum is simply dummy",
+        description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        image = R.drawable.first
+    ),
+    Page(
+        title = "Lorem Ipsum is simply dummy",
+        description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        image = R.drawable.second
+    ),
+    Page(
+        title = "Lorem Ipsum is simply dummy",
+        description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        image = R.drawable.third
     )
-
-    object Third : OnBoardingPage(
-        image = R.drawable.third,
-        title = "Dialogue",
-        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
-    )
-}
+)

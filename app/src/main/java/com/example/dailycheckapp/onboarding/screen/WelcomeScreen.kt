@@ -14,6 +14,13 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.dailycheckapp.onboarding.navigation.Screen
-import com.example.dailycheckapp.onboarding.util.OnBoardingPage
+import com.example.dailycheckapp.onboarding.util.Page
+import com.example.dailycheckapp.onboarding.util.pages
+import com.example.dailycheckapp.onboarding.viewmodel.OnBoardingEvent
 import com.example.dailycheckapp.onboarding.viewmodel.WelcomeViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -34,48 +43,68 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
 fun WelcomeScreen(
     navController: NavHostController,
-    welcomeViewModel: WelcomeViewModel = hiltViewModel()
+    onEvent :(OnBoardingEvent) -> Unit
 ) {
-    val pages = listOf(
-        OnBoardingPage.First,
-        OnBoardingPage.Second,
-        OnBoardingPage.Third
-    )
     val pagerState = rememberPagerState()
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        HorizontalPager(
-            modifier = Modifier.weight(10f),
-            count = 3,
-            state = pagerState,
-            verticalAlignment = Alignment.Top
-        ) { position ->
-            PagerScreen(onBoardingPage = pages[position])
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "") },
+                navigationIcon = {
+                    IconButton(onClick = { /* Handle navigation icon click */ }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        },
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                HorizontalPager(
+                    modifier = Modifier.weight(10f),
+                    count = pages.size,
+                    state = pagerState,
+                    verticalAlignment = Alignment.Top
+                ) { position ->
+                    PagerScreen(onBoardingPage = pages[position])
+                }
+                HorizontalPagerIndicator(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .weight(1f),
+                    pagerState = pagerState
+                )
+                FinishButton(
+                    modifier = Modifier.weight(1f),
+                    pagerState = pagerState,
+                    navController = navController,
+                    onEvent = {
+                        onEvent(OnBoardingEvent.SaveAppEntry)
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Welcome.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                )
+
+            }
         }
-        HorizontalPagerIndicator(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .weight(1f),
-            pagerState = pagerState
-        )
-        FinishButton(
-            modifier = Modifier.weight(1f),
-            pagerState = pagerState
-        ) {
-            welcomeViewModel.saveOnBoardingState(completed = true)
-            navController.popBackStack()
-            navController.navigate(Screen.Home.route)
-        }
-    }
+    )
 }
 
 @Composable
-fun PagerScreen(onBoardingPage: OnBoardingPage) {
+fun PagerScreen(onBoardingPage: Page) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -110,13 +139,13 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
     }
 }
 
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun FinishButton(
     modifier: Modifier,
     pagerState: PagerState,
-    onClick: () -> Unit
+    navController: NavHostController,
+    onEvent: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -126,12 +155,15 @@ fun FinishButton(
     ) {
         AnimatedVisibility(
             modifier = Modifier.fillMaxWidth(),
-            visible = pagerState.currentPage == 2
+            visible = pagerState.currentPage == pages.size - 1
         ) {
             Button(
-                onClick = onClick,
+                onClick = {
+                    onEvent()
+                },
                 colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.White
+                    contentColor = Color.White,
+                    backgroundColor = Color.Blue
                 )
             ) {
                 Text(text = "Finish")
@@ -144,7 +176,7 @@ fun FinishButton(
 @Preview(showBackground = true)
 fun FirstOnBoardingScreenPreview() {
     Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPage = OnBoardingPage.First)
+        PagerScreen(onBoardingPage = pages[0])
     }
 }
 
@@ -152,7 +184,7 @@ fun FirstOnBoardingScreenPreview() {
 @Preview(showBackground = true)
 fun SecondOnBoardingScreenPreview() {
     Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPage = OnBoardingPage.Second)
+        PagerScreen(onBoardingPage = pages[1])
     }
 }
 
@@ -160,6 +192,6 @@ fun SecondOnBoardingScreenPreview() {
 @Preview(showBackground = true)
 fun ThirdOnBoardingScreenPreview() {
     Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPage = OnBoardingPage.Third)
+        PagerScreen(onBoardingPage = pages[2])
     }
 }

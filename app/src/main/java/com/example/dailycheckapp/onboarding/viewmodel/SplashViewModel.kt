@@ -1,35 +1,36 @@
 package com.example.dailycheckapp.onboarding.viewmodel
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dailycheckapp.onboarding.data.DataStoreRepository
+import com.example.dailycheckapp.domain.usecases.AppEntryUseCases
 import com.example.dailycheckapp.onboarding.navigation.Screen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(
-    private val repository: DataStoreRepository
+    private val appEntryUseCases: AppEntryUseCases
 ) : ViewModel() {
 
-    private val _isLoading: MutableState<Boolean> = mutableStateOf(true)
-    val isLoading: State<Boolean> = _isLoading
+    private val _splashCondition = MutableStateFlow(true)
+    val splashCondition: StateFlow<Boolean> = _splashCondition
 
-    private val _startDestination: MutableState<String> = mutableStateOf(Screen.Welcome.route)
-    val startDestination: State<String> = _startDestination
+    private val _startDestination = MutableStateFlow(Screen.AppStartNavigation.route)
+    val startDestination: StateFlow<String> = _startDestination
 
     init {
         viewModelScope.launch {
-            repository.readOnBoardingState().collect { completed ->
-                if (completed) {
-                    _startDestination.value = Screen.Home.route
+            appEntryUseCases.readAppEntry().collect { shouldStartFromHomeScreen: Boolean ->
+                if (shouldStartFromHomeScreen) {
+                    _startDestination.value = Screen.NewsNavigation.route
                 } else {
-                    _startDestination.value = Screen.Welcome.route
+                    _startDestination.value = Screen.AppStartNavigation.route
                 }
+                delay(200)
+                _splashCondition.value = false
             }
-            _isLoading.value = false
         }
     }
-
 }
