@@ -6,7 +6,9 @@ sealed class Screen(
     val route: String,
     val arguments: List<NamedNavArgument> = emptyList()
 ) {
-    object OnBoardingScreen : Screen(route = "onBoardingScreen")
+    object WelcomeScreen : Screen(route = "welcomeScreen")
+
+    object HomeScreen : Screen(route = "homeScreen")
 
     object SearchScreen : Screen(route = "searchScreen")
 
@@ -17,6 +19,7 @@ sealed class Screen(
     object AppStartNavigation : Screen(route = "appStartNavigation")
 
     object NewsNavigation : Screen(route = "newsNavigation")
-    object Welcome : Screen(route = "welcome_screen")
-    object Home : Screen(route = "home_screen")
+
+    object NewsNavigatorScreen : Screen(route = "newsNavigator")
 }
+

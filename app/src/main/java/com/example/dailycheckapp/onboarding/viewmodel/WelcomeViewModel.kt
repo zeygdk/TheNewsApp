@@ -2,10 +2,8 @@ package com.example.dailycheckapp.onboarding.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dailycheckapp.domain.usecases.AppEntryUseCases
-import com.example.dailycheckapp.onboarding.data.DataStoreRepository
+import com.example.dailycheckapp.domain.usecases.appentry.AppEntryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
