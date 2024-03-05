@@ -105,6 +105,11 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.5.0"
 
     implementation "androidx.compose.animation:animation-core:1.6.1"
+//Room
+    def room_version = "2.6.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:2.6.1"
 
 
 }

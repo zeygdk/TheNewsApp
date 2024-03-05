@@ -27,20 +27,13 @@ fun NavGraph(startDestination: String, navController: NavHostController) {
                 WelcomeScreen(navController = navController, onEvent = viewModel::onEvent)
             }
         }
-
         navigation(
             route = Screen.NewsNavigation.route,
             startDestination = Screen.NewsNavigatorScreen.route
         ) {
-            composable(route = Screen.NewsNavigatorScreen.route) {
-                val viewModel: SearchViewModel = hiltViewModel()
-                SearchScreen(
-                    state = viewModel.state,
-                    navController = navController,
-                    event = viewModel::onEvent
-                )
-            }
+            composable(route = Screen.NewsNavigatorScreen.route){
 
+            }
         }
 
         composable(route = Screen.HomeScreen.route) {

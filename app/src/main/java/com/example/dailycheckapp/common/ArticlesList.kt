@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,14 +15,12 @@ import androidx.paging.compose.LazyPagingItems
 import com.example.dailycheckapp.domain.model.Article
 
 @Composable
-fun ArticlesList(
+fun ArticlesListPaged(
     modifier: Modifier = Modifier,
     articles: LazyPagingItems<Article>,
-    onClick:(Article) -> Unit
+    onClick: (Article) -> Unit
 ) {
-
     val handlePagingResult = handlePagingResult(articles)
-
 
     if (handlePagingResult) {
         LazyColumn(
@@ -33,12 +32,32 @@ fun ArticlesList(
                 count = articles.itemCount,
             ) {
                 articles[it]?.let { article ->
-                    ArticleCard(article = article, onClick = {onClick(article)})
+                    ArticleCard(article = article, onClick = { onClick(article) })
                 }
             }
         }
     }
 }
+
+@Composable
+fun ArticlesList(
+    modifier: Modifier = Modifier,
+    articles: List<Article>,
+    onClick: (Article) -> Unit
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(all = 6.dp)
+    ) {
+        items(
+            items = articles,
+        ) { article ->
+            ArticleCard(article = article, onClick = { onClick(article) })
+        }
+    }
+}
+
 
 @Composable
 fun handlePagingResult(articles: LazyPagingItems<Article>): Boolean {
@@ -69,8 +88,8 @@ fun handlePagingResult(articles: LazyPagingItems<Article>): Boolean {
 
 @Composable
 fun ShimmerEffect() {
-    Column(verticalArrangement = Arrangement.spacedBy(24.dp)){
-        repeat(10){
+    Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+        repeat(10) {
             ArticleCardShimmerEffect(
                 modifier = Modifier.padding(horizontal = 24.dp)
             )

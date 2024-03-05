@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.dailycheckapp.common.ArticlesList
+import com.example.dailycheckapp.common.ArticlesListPaged
 import com.example.dailycheckapp.common.SearchBar
 
 @Composable
@@ -37,7 +38,7 @@ fun SearchScreen(
         Spacer(modifier = Modifier.height(24.dp))
         state.value.articles?.let {  // Access the value property
             val articles = it.collectAsLazyPagingItems()
-            ArticlesList(
+            ArticlesListPaged(
                 articles = articles,
                 onClick = {
                     //TODO: Navigate to details screen

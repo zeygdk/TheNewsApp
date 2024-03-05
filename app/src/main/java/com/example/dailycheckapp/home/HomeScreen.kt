@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import com.example.dailycheckapp.R
 import com.example.dailycheckapp.common.ArticlesList
+import com.example.dailycheckapp.common.ArticlesListPaged
 import com.example.dailycheckapp.common.SearchBar
 import com.example.dailycheckapp.domain.model.Article
 import com.example.dailycheckapp.onboarding.navigation.Screen
@@ -87,7 +88,7 @@ fun HomeScreen(articles: LazyPagingItems<Article>, navigate:(String) -> Unit) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ArticlesList(
+        ArticlesListPaged(
             modifier = Modifier.padding(horizontal = 10.dp),
             articles = articles,
             onClick = {
