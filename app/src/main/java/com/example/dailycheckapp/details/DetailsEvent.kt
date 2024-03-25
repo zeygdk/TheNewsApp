@@ -1,7 +1,10 @@
 package com.example.dailycheckapp.details
 
-sealed class DetailsEvent {
+import com.example.dailycheckapp.domain.model.Article
 
-    data object SaveArticle : DetailsEvent()
+sealed class DetailsEvent {
+    data class UpsertDeleteArticle(val article: Article) : DetailsEvent()
+
+    data object RemoveSideEffect : DetailsEvent()
 
 }

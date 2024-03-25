@@ -14,21 +14,22 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.dailycheckapp.common.ArticlesList
 import com.example.dailycheckapp.common.ArticlesListPaged
 import com.example.dailycheckapp.common.SearchBar
+import com.example.dailycheckapp.domain.model.Article
 
 @Composable
 fun SearchScreen(
     state: State<SearchState>,
     event: (SearchEvent) -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    navigateToDetails: (Article) -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .padding(top = 24.dp, start = 24.dp, end = 24.dp)
             .statusBarsPadding()
     ) {
         SearchBar(
-            text = state.value.searchQuery,  // Access the value property
+            text = state.value.searchQuery,
             readOnly = false,
             onValueChange = { event(SearchEvent.UpdateSearchQuery(it)) },
             onSearch = {
@@ -40,9 +41,7 @@ fun SearchScreen(
             val articles = it.collectAsLazyPagingItems()
             ArticlesListPaged(
                 articles = articles,
-                onClick = {
-                    //TODO: Navigate to details screen
-                }
+                onClick = navigateToDetails
             )
         }
     }
